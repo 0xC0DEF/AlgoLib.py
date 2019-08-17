@@ -32,14 +32,14 @@ def conv(a,b):
 
 def conv_mul(a,b):
   a=list(a);b=list(b)
-  n=len(a)
+  n=max(len(a),len(b))
   a.extend([0]*(topow2(n*2)-n))
   b.extend([0]*(topow2(n*2)-n))
   return conv(a,b)
 
 def conv_cir(a,b):
   a=list(a);b=list(b)
-  n=len(a)
+  n=max(len(a),len(b))
   a.extend([0]*(topow2(n*2)-n))
   b.reverse()
   for i in range(topow2(n*2)-n):
