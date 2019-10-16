@@ -17,26 +17,24 @@ void regi(const string &s)
 	}
 }
 
+set<string> stdmodule={"sys","functools","math"};
+
 void solve(const string &fname, const string &hdir)
 {
 	regi(fname);
-	auto tmp = (fname.substr(fname.size()-2, 2) == ".h"?hdir:"") + fname;
-	ifstream in((fname.substr(fname.size()-2, 2) == ".h"?hdir:"") + fname);
-	char buf[10000];
+	ifstream in(fname + ".py");
+	char buf[1000];
 	while (in.getline(buf, sizeof buf))
 	{
-		if (string(buf, 8) == "#include")
+		if (string(buf, 5) == "from ")
 		{
-			auto it = buf + 8;
+			auto it = buf + 5;
 			while (*it == ' ' || *it == '\t')
 				it++;
-			if (*it != '\"')
-				continue;
-			string s = it + 1;
-			while(s.back() == ' ' || s.back()=='\t'||s.back() == '\r' || s.back()=='\n')
-				s.pop_back();
-			s.pop_back();
-			if (s == "bits/stdc++.h")
+			string s;
+			while(*it != ' ')
+				s.push_back(*it++);
+			if (stdmodule.count(s))
 				continue;
 			solve(s, hdir);
 			g.add_edge(s2i[fname], s2i[s]);
@@ -46,57 +44,43 @@ void solve(const string &fname, const string &hdir)
 }
 
 int main(int argc, char ** argv){
-	string fn;
-	string hdir;
-	if (argc < 3)	{
-		cout << "main source file: ";
+	string fn, hdir="./";
+	if (argc < 2)	{
+		cout << "source file: ";
 		cin >> fn;
-		cout << "header directory: ";
-		cin >> hdir;
-		if(hdir.back() != '/')
-			hdir.push_back('/');
 	}
-	else if (argc == 3)	{
+	else if (argc == 2)	{
 		fn = argv[1];
-		if (fn.substr(fn.size() - 4, 4) != ".cpp")
-			fn += ".cpp";
-		hdir = argv[2];
-		if(hdir.back() != '/')
-			hdir.push_back('/');
+		if (fn.substr(fn.size() - 3, 3) == ".py")
+			fn=fn.substr(0,fn.size() - 3);
 	}
 	else	{
 		cout << "Usage1 : merger.exe" << endl;
-		cout << "Usage2 : merger.exe <MAIN_SOURCE_FILE> <HEADER_PATH>" << endl;
+		cout << "Usage2 : merger.exe <MAIN_SOURCE_FILE>" << endl;
 		return 0;
 	}
 	solve(fn, hdir);
 	auto ord = g.topo_sort();
 	reverse(all(ord));
-	ofstream out("src/output.cpp");
+	ofstream out("merged.py");
 	for (auto i : ord)
 	{
-				if(!im[i])
-						continue;
-		ifstream in((i2s[i].substr(i2s[i].size()-2, 2) == ".h"?hdir:"") + i2s[i]);
-		char buf[10000];
+		if(!im[i])
+			continue;
+		ifstream in(i2s[i] + ".py");
+		char buf[1000];
 		while (in.getline(buf, sizeof buf))
 		{
-			if (string(buf, strlen("#pragma once")) == "#pragma once")
-				continue;
-			if (string(buf, strlen("#include")) == "#include")
+			if (string(buf, strlen("from ")) == "from ")
 			{
-				auto it = buf + 8;
+				auto it = buf + 5;
 				while (*it == ' ' || *it == '\t')
 					it++;
-				if (*it == '\"')
-				{
-					string s = it + 1;
-					while (s.back() == ' ' || s.back() == '\t'||s.back() == '\r' || s.back()=='\n')
-						s.pop_back();
-					s.pop_back();
-					if (s != "bits/stdc++.h")
-						continue;
-				}
+				string s;
+				while(*it != ' ')
+					s.push_back(*it++);
+				if (!stdmodule.count(s))
+					continue;
 			}
 			out << buf << endl;
 		}
