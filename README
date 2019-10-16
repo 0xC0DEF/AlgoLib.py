@@ -1,2 +1,2 @@
-Build & Run Command
-./merger.out main.py && python3 merged.py
+Run and Merge Command
+python3 main.py && ./merger.out main.py
