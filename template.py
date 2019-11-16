@@ -1,10 +1,6 @@
 import sys
 sys.setrecursionlimit(1000000)
-from math import gcd
 from NumberTheory import *
-
-n,x=map(int,input().split());
-xgcd
 
 n,p,w,d=map(int,input().split())
 x,y,g=xgcd(w,d)

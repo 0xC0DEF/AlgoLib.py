@@ -4,6 +4,10 @@ def fastpow(a, p, m):
 	t=fastpow(a,p//2)
 	return t*t*(a if a%2 else 1)
 
+#Multivariable Linear Deophantine:
+#ax+by+cz=k
+#=> gcd(a,b)w+cz=k && ax+by=gcd(a,b)w
+#(extend it recursively)
 def xgcd(a,b):
 	if b==0:
 		return (1,0,abs(a))
