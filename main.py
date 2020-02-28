@@ -2,7 +2,7 @@ import sys
 sys.setrecursionlimit(1000000)
 from math import gcd
 from NumberTheory import *
-
+import gc; gc.disable()
 n,x=map(int,input().split());
 xgcd
 
