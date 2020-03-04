@@ -1,3 +1,4 @@
+M=30
 def conv_mul(a,b):
 	a=int(''.join(list(map(lambda x:('{:0'+str(M)+'b}').format(x), a[::-1]))),2)
 	b=int(''.join(list(map(lambda x:('{:0'+str(M)+'b}').format(x), b[::-1]))),2)
